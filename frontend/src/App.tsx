@@ -1,5 +1,5 @@
-
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { Entity } from 'cesium'
 import {
   Viewer,
   Cartesian3,
@@ -18,6 +18,7 @@ import 'cesium/Build/Cesium/Widgets/widgets.css'
 import './App.css'
 
 
+
 // Parámetros de nuestra órbita circular
 const EARTH_RADIUS_KM = 6371
 const ALTITUDE_KM = 500
@@ -31,6 +32,79 @@ Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_TOKEN
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const viewerRef = useRef<Viewer | null>(null)
+  const satelliteRef = useRef<Entity | null>(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [simulationSpeed, setSimulationSpeed] = useState(100)
+  const [missionSeconds, setMissionSeconds] = useState(0)
+
+
+  function showGlobalView() {
+    const viewer = viewerRef.current
+
+    if (!viewer) return
+
+
+    // Dejar de seguir al satélite
+    viewer.trackedEntity = undefined
+
+    const cameraPosition = new Cartesian3(
+      0,
+      -25000000,
+      18000000
+    )
+
+    viewer.camera.flyTo({
+      destination: cameraPosition,
+      orientation: {
+        direction: Cartesian3.normalize(
+          Cartesian3.negate(cameraPosition, new Cartesian3()),
+          new Cartesian3()
+        ),
+        up: Cartesian3.UNIT_Z,
+      },
+      duration: 2,
+    })
+  }
+
+  
+  function followSatellite() {
+    const viewer = viewerRef.current
+    const satellite = satelliteRef.current
+
+    if (!viewer || !satellite) return
+
+    // Distancia y orientación inicial de la cámara
+    // respecto al CubeSat (metros, sistema local).
+    satellite.viewFrom = new Cartesian3(
+      -1500,
+      -3500,
+      1800
+    )
+
+    // Activar seguimiento automático
+    viewer.trackedEntity = satellite
+  }
+
+
+  function toggleSimulation() {
+    const viewer = viewerRef.current
+    if (!viewer) return
+
+    const nextState = !viewer.clock.shouldAnimate
+
+    viewer.clock.shouldAnimate = nextState
+    setIsPlaying(nextState)
+  }
+
+  function changeSimulationSpeed(speed: number) {
+    const viewer = viewerRef.current
+    if (!viewer) return
+
+    viewer.clock.multiplier = speed
+    setSimulationSpeed(speed)
+  }
+
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -49,6 +123,11 @@ function App() {
       selectionIndicator: false,
     })
 
+    viewerRef.current = viewer
+
+    // Permitir acercarse más a la superficie y al satélite
+    viewer.scene.screenSpaceCameraController.minimumZoomDistance = 10
+    viewer.scene.screenSpaceCameraController.maximumZoomDistance = 100000000
 
     // Cargar textura terrestre
     async function loadEarth() {
@@ -110,6 +189,7 @@ function App() {
     // 2. TIEMPO DE SIMULACIÓN
     // ========================================
 
+    
     const startTime = JulianDate.clone(
       viewer.clock.currentTime
     )
@@ -117,10 +197,35 @@ function App() {
     viewer.clock.multiplier = 100
     viewer.clock.shouldAnimate = true
 
+    // Actualizar el tiempo de misión en el panel
+    let lastUpdate = 0
+
+    const updateMissionTime = () => {
+      const now = Date.now()
+
+      // Actualizamos la interfaz cada 250 ms
+      if (now - lastUpdate < 250) return
+
+      lastUpdate = now
+
+      const elapsed = JulianDate.secondsDifference(
+        viewer.clock.currentTime,
+        startTime
+      )
+
+      setMissionSeconds(Math.max(0, Math.floor(elapsed)))
+    }
+
+    viewer.clock.onTick.addEventListener(updateMissionTime)
+
+    // La posición del satélite sigue calculándose
+    // con el tiempo de Cesium
     const satellitePosition = new CallbackPositionProperty(
       (time, result) => {
-        const elapsedSeconds =
-            JulianDate.secondsDifference(time ?? startTime, startTime)
+        const elapsedSeconds = JulianDate.secondsDifference(
+          time ?? startTime,
+          startTime
+        )
 
         const angle =
           (2 * Math.PI * elapsedSeconds) / periodSeconds
@@ -133,11 +238,12 @@ function App() {
       false
     )
 
+
     // ========================================
     // 3. MODELO 3D DEL CUBESAT
     // ========================================
 
-    viewer.entities.add({
+    const satellite = viewer.entities.add({
       name: 'CubeSat-01',
       position: satellitePosition,
 
@@ -157,6 +263,8 @@ function App() {
         pixelOffset: new Cartesian2(0, -45),
       },
     })
+
+    satelliteRef.current = satellite
 
     // ========================================
     // 4. CÁMARA MÁS ALEJADA
@@ -183,7 +291,14 @@ function App() {
     })
 
     return () => {
-      viewer.destroy()
+      viewer.clock.onTick.removeEventListener(updateMissionTime)
+
+      viewerRef.current = null
+      satelliteRef.current = null
+
+      if (!viewer.isDestroyed()) {
+        viewer.destroy()
+      }
     }
   }, [])
 
@@ -205,7 +320,35 @@ function App() {
           <p>LEO · 500 km · Circular orbit</p>
           <p>Velocidad: {speedKmS.toFixed(2)} km/s</p>
           <p>Periodo: {(periodSeconds / 60).toFixed(1)} min</p>
-          <p>Simulación: x100</p>
+          <p>Tiempo de misión: {missionSeconds} s</p>
+          <p>Velocidad: x{simulationSpeed}</p>
+
+          <div className="simulation-controls">
+            <button onClick={toggleSimulation}>
+              {isPlaying ? '⏸ Pausar' : '▶ Reanudar'}
+            </button>
+
+            <div className="speed-controls">
+              {[1, 10, 100].map((speed) => (
+                <button
+                  key={speed}
+                  className={simulationSpeed === speed ? 'active' : ''}
+                  onClick={() => changeSimulationSpeed(speed)}
+                >
+                  x{speed}
+                </button>
+              ))}
+            </div>
+          </div>  
+          <div className="camera-controls">
+            <button onClick={showGlobalView}>
+              Vista global
+            </button>
+
+            <button onClick={followSatellite}>
+              Seguir CubeSat
+            </button>
+          </div>
         </div>
       </main>
     </div>
