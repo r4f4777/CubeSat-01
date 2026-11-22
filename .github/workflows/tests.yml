@@ -1,0 +1,29 @@
+
+name: CubeSat-01 Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build and test C++17
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install C++ compiler
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      - name: Compile and run all tests
+        shell: msys2 {0}
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./run_tests.ps1
