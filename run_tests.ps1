@@ -30,8 +30,13 @@ $tests = @(
             "src/SensorValidator.cpp",
             "src/CameraManager.cpp",
             "src/MissionManager.cpp",
+            "src/MissionClock.cpp",
             "src/SatelliteController.cpp"
         )
+    },
+    @{
+        Name = "test_clock"
+        Sources = @("tests/test_clock.cpp", "src/MissionClock.cpp")
     }
 )
 
