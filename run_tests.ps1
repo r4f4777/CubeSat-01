@@ -37,6 +37,10 @@ $tests = @(
     @{
         Name = "test_clock"
         Sources = @("tests/test_clock.cpp", "src/MissionClock.cpp")
+    },
+    @{
+        Name = "test_orbit"
+        Sources = @("tests/test_orbit.cpp", "src/OrbitSimulator.cpp")
     }
 )
 
