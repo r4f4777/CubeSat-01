@@ -74,9 +74,9 @@ Una aplicación desde la que podamos:
 - [x] Resolver de forma explícita qué hacer ante un estado incierto (verificar resultado, bloquear reintento o solicitar intervención).
 - [x] Persistir el resultado de la misión, diferenciando `COMPLETED`, `EXPIRED` y posibles errores; no depender únicamente de borrar el archivo.
 - [x] Hacer el guardado más resistente a interrupciones (archivo temporal, validación y sustitución controlada).
-- [ ] Sustituir la suma básica por un CRC adecuado y validar datos y versiones de formato.
-- [ ] Separar `main.cpp` en módulos `.h` / `.cpp`.
-- [ ] Crear pruebas automatizadas y dejar `main()` como punto de entrada, sin pruebas comentadas.
+- [x] Sustituir la suma básica por un CRC adecuado y validar datos y versiones de formato.
+- [x] Separar `main.cpp` en módulos `.h` / `.cpp`.
+- [x] Crear pruebas automatizadas y dejar `main()` como punto de entrada, sin pruebas comentadas.
 
 **Criterio para cerrar fase:** las transiciones de misión y los reinicios se comportan de forma previsible en pruebas repetibles. *No implica garantía de ejecución exactamente una vez.*
 
@@ -86,14 +86,16 @@ Una aplicación desde la que podamos:
 
 **Estado: PENDIENTE**
 
-- [ ] Crear un reloj de simulación independiente del reloj real.
+- [x] Crear un reloj de simulación independiente del reloj real.
+- [x] Implementar multiplicadores temporales x1, x10 y x100.
+- [x] Integrar el reloj con SatelliteController y verificarlo mediante pruebas automatizadas.
 - [ ] Definir posición orbital, altitud y velocidad del satélite.
 - [ ] Empezar con una órbita circular simplificada (~500 km de altura).
 - [ ] Añadir rotación terrestre y localización de Madrid.
 - [ ] Calcular si un objetivo está dentro de la zona observable por la cámara.
 - [ ] Introducir orientación simplificada del satélite y campo de visión.
 - [ ] Convertir la visibilidad geométrica en una condición adicional de `requestPhoto()`.
-- [ ] Permitir `pause`, `resume` y multiplicadores temporales.
+- [ ] Permitir `pause`, `resume` y multiplicadores temporales para no perder ventanas de fotografía.
 
 **Criterio para cerrar fase:** al solicitar una fotografía de Madrid, el sistema espera a tener visibilidad y verifica energía y estado antes de ejecutarla.
 
