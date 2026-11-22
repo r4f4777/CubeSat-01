@@ -5,6 +5,7 @@
 #include <SensorValidator.h>
 #include <CameraManager.h>
 #include <MissionManager.h>
+#include "MissionClock.h"
 
 class SatelliteController {
 
@@ -13,6 +14,7 @@ private:
     SensorValidator validator;
     CameraManager camera;
     MissionManager mission;
+    MissionClock clock;
 
 public:
 
@@ -35,5 +37,11 @@ public:
     bool recoverMission();
 
     bool missionNeedsReview() const;
+
+    void tick();
+
+    int getMissionTime() const;
+    
+    bool setSimulationSpeed(int speed);
 
 };

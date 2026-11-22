@@ -26,7 +26,7 @@ std::string SatelliteController::getModeString() const {
     return power.getModeString();
 }
 
-bool SatelliteController::SatelliteController::requestPhoto() {
+bool SatelliteController::requestPhoto() {
 
     // 1. Consultar el modo energético.
     if(power.getMode() != SatelliteMode::NORMAL){
@@ -81,4 +81,17 @@ bool SatelliteController::recoverMission() {
 
 bool SatelliteController::missionNeedsReview() const {
     return mission.needsReview();
+}
+
+void SatelliteController::tick(){
+    clock.tick();
+    updateMission(clock.getTime());
+}
+
+int SatelliteController::getMissionTime() const{
+    return clock.getTime();
+}
+
+bool SatelliteController::setSimulationSpeed(int speed){
+    return clock.setSpeed(speed);
 }
