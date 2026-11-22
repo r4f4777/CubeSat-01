@@ -1,0 +1,15 @@
+
+# Executables and build artifacts
+build/
+*.exe
+*.o
+*.obj
+
+# Mission data
+*.dat
+*.tmp
+
+# Editor and OS
+.vscode/
+.DS_Store
+Thumbs.db
