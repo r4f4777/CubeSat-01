@@ -12,8 +12,11 @@ private:
     double altitudeKm = 500.0;
     double earthRadiusKm = 6371.0;
     double mu = 398600.4418;
+    double inclinationDegrees = 0.0;
 
 public:
+    explicit OrbitSimulator(double inclinationDegrees = 0.0);
+
     double getOrbitalRadiusKm() const;
     double getOrbitalSpeedKmS() const;
     double getOrbitalPeriodSeconds() const;

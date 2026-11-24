@@ -231,3 +231,12 @@ bool MissionManager::schedulePhoto(const PhotoCommand& command) {
         return hasPendingCommand &&
             commandState == CommandState::EXECUTING;
     }
+
+
+    bool MissionManager::isPendingTarget(
+        const std::string& target
+    ) const {
+        return hasPendingCommand &&
+            commandState == CommandState::PENDING &&
+            pendingCommand.target == target;
+    }

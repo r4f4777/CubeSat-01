@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    OrbitSimulator orbit;
+    OrbitSimulator orbit(51.6);
     OrbitalPosition position = orbit.getPosition(timeSeconds);
 
     std::cout << std::setprecision(15);
