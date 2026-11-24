@@ -387,7 +387,7 @@ function App() {
             orbitPositions.push(orbitPositions[0].clone())
 
             viewer.entities.add({
-              name: 'Ã“rbita de CubeSat-01',
+              name: 'Órbita de CubeSat-01',
               polyline: {
                 positions: orbitPositions,
                 width: 2,
@@ -488,10 +488,10 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>ðŸ›° CubeSat-01</h1>
+        <h1>CubeSat-01</h1>
         <span>MISSION SIMULATOR</span>
         <span className="status">
-          â— SIMULATION READY
+          SIMULATION READY
         </span>
       </header>
 
@@ -500,15 +500,15 @@ function App() {
 
         <div className="overlay">
           <h2>EARTH ORBITAL VIEW</h2>
-          <p>LEO Â· 500 km Â· Circular orbit</p>
+          <p>LEO · 500 km · Circular orbit</p>
           <p>Velocidad: {speedKmS.toFixed(2)} km/s</p>
           <p>Periodo: {(periodSeconds / 60).toFixed(1)} min</p>
-          <p>Tiempo de misiÃ³n: {missionSeconds} s</p>
+          <p>Tiempo de misión: {missionSeconds} s</p>
           <p>Velocidad: x{simulationSpeed}</p>
 
           <div className="simulation-controls">
             <button onClick={toggleSimulation}>
-              {isPlaying ? 'â¸ Pausar' : 'â–¶ Reanudar'}
+              {isPlaying ? 'Pausar' : 'Reanudar'}
             </button>
 
             <div className="speed-controls">

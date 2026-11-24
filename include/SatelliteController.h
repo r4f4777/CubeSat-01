@@ -6,6 +6,8 @@
 #include <CameraManager.h>
 #include <MissionManager.h>
 #include "MissionClock.h"
+#include "OrbitSimulator.h"
+#include "GeoCoordinates.h"
 
 class SatelliteController {
 
@@ -15,6 +17,10 @@ private:
     CameraManager camera;
     MissionManager mission;
     MissionClock clock;
+    int lastMissionUpdateTime = -1;
+
+    void processMissionAtTime(int currentTime);
+
 
 public:
 
@@ -27,6 +33,12 @@ public:
     std::string getModeString() const;
 
     bool requestPhoto();
+
+    bool requestPhotoOfTarget(
+        const OrbitalPosition& satellite,
+        const GeoPosition& target,
+        double cameraFovDegrees = 40.0
+    );
 
     int getPhotosTaken() const;
 
@@ -44,4 +56,5 @@ public:
     
     bool setSimulationSpeed(int speed);
 
+    CommandState getMissionState() const;
 };

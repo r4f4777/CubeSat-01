@@ -49,4 +49,6 @@ public:
     bool beginExecution();
 
     bool needsReview() const;
+
+    bool isPendingTarget(const std::string& target) const;
 };

@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    OrbitSimulator orbit;
+    OrbitSimulator orbit(51.6);
 
     std::cout << std::setprecision(15);
     std::cout << "[\n";

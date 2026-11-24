@@ -2,9 +2,10 @@
 #include <cassert>
 #include <iostream>
 #include "MissionManager.h"
+#include <cstdio>
 
 int main() {
-    MissionManager mission("mission_test.dat");;
+    MissionManager mission("mission_test.dat");
 
     // Primera orden válida
     assert(mission.schedulePhoto({"MADRID", 30, 75}));
@@ -83,6 +84,26 @@ int main() {
     // No se debe iniciar otra vez
     assert(!restartedUncertain.beginExecution());
 
+
+    {
+        MissionManager madridMission("test_madrid_target.dat");
+
+        PhotoCommand command{
+            "Madrid",
+            97200,
+            97300
+        };
+
+        assert(madridMission.schedulePhoto(command));
+
+        assert(madridMission.isPendingTarget("Madrid"));
+        assert(!madridMission.isPendingTarget("Barcelona"));
+
+        assert(madridMission.beginExecution());
+        assert(!madridMission.isPendingTarget("Madrid"));
+    }
+
+    std::remove("test_madrid_target.dat");
     std::cout << "MissionManager tests: PASSED\n";
 
     return 0;

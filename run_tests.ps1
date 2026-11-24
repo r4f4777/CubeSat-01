@@ -31,7 +31,10 @@ $tests = @(
             "src/CameraManager.cpp",
             "src/MissionManager.cpp",
             "src/MissionClock.cpp",
-            "src/SatelliteController.cpp"
+            "src/SatelliteController.cpp",
+            "src/OrbitSimulator.cpp",
+            "src/GeoCoordinates.cpp",
+            "src/VisibilityCalculator.cpp"
         )
     },
     @{
@@ -41,6 +44,42 @@ $tests = @(
     @{
         Name = "test_orbit"
         Sources = @("tests/test_orbit.cpp", "src/OrbitSimulator.cpp")
+    },
+    @{
+        Name = "test_geo_coordinates"
+        Sources = @(
+            "tests/test_geo_coordinates.cpp",
+            "src/GeoCoordinates.cpp"
+        )
+    },
+    @{
+        Name = "test_orbit_inclination"
+        Sources = @(
+            "tests/test_orbit_inclination.cpp",
+            "src/OrbitSimulator.cpp"
+        )
+    },
+    @{
+        Name = "test_visibility"
+        Sources = @(
+            "tests/test_visibility.cpp",
+            "src/VisibilityCalculator.cpp"
+        )
+    },
+    @{
+        Name = "test_photo_visibility"
+        Sources = @(
+            "tests/test_photo_visibility.cpp",
+            "src/PowerManager.cpp",
+            "src/SensorValidator.cpp",
+            "src/CameraManager.cpp",
+            "src/MissionManager.cpp",
+            "src/MissionClock.cpp",
+            "src/SatelliteController.cpp",
+            "src/OrbitSimulator.cpp",
+            "src/GeoCoordinates.cpp",
+            "src/VisibilityCalculator.cpp"
+        )
     }
 )
 
