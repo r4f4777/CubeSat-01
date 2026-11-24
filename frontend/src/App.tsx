@@ -124,6 +124,41 @@ function App() {
     })
 
     viewerRef.current = viewer
+
+
+    // ========================================
+    // OBJETIVO TERRESTRE: MADRID
+    // ========================================
+
+    const madridPosition = Cartesian3.fromDegrees(
+      -3.7038,  // Longitud oeste
+      40.4168,   // Latitud norte
+      10000      // Altura visual del marcador: 10 km
+    )
+
+    viewer.entities.add({
+      name: 'Madrid - Photography Target',
+      position: madridPosition,
+
+      point: {
+        pixelSize: 12,
+        color: Color.RED,
+        outlineColor: Color.WHITE,
+        outlineWidth: 2,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      },
+
+      label: {
+        text: 'MADRID - TARGET',
+        font: '15px Arial',
+        fillColor: Color.WHITE,
+        outlineColor: Color.BLACK,
+        outlineWidth: 2,
+        pixelOffset: new Cartesian2(0, -25),
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      },
+    })
+
     // Comprobar conexiÃ³n con nuestro motor C++
 
 
